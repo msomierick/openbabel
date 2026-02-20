@@ -12,11 +12,9 @@ GENERATOR="${GENERATOR:-Ninja}"
 case "$(uname -s)" in
   Linux*)
     PLATFORM="linux"
-    EXTRA_FLAGS=(-DBUILD_MIXED=ON)
     ;;
   Darwin*)
     PLATFORM="macos"
-    EXTRA_FLAGS=()
     ;;
   *)
     echo "Unsupported OS for this script: $(uname -s)" >&2
@@ -27,20 +25,26 @@ esac
 ARCH="$(uname -m)"
 OUTPUT_BIN="${OUT_DIR}/obabel-${PLATFORM}-${ARCH}"
 
-cmake -S "${ROOT_DIR}" -B "${BUILD_DIR}" -G "${GENERATOR}" \
-  -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
-  -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" \
-  -DBUILD_SHARED=OFF \
-  -DENABLE_TESTS=OFF \
-  -DBUILD_GUI=OFF \
-  -DRUN_SWIG=OFF \
-  -DPYTHON_BINDINGS=OFF \
-  -DWITH_COORDGEN=OFF \
-  -DWITH_MAEPARSER=OFF \
-  -DWITH_JSON=OFF \
-  -DWITH_STATIC_INCHI=ON \
-  -DOPENBABEL_USE_SYSTEM_INCHI=OFF \
-  "${EXTRA_FLAGS[@]}"
+cmake_args=(
+  -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+  -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}"
+  -DBUILD_SHARED=OFF
+  -DENABLE_TESTS=OFF
+  -DBUILD_GUI=OFF
+  -DRUN_SWIG=OFF
+  -DPYTHON_BINDINGS=OFF
+  -DWITH_COORDGEN=OFF
+  -DWITH_MAEPARSER=OFF
+  -DWITH_JSON=OFF
+  -DWITH_STATIC_INCHI=ON
+  -DOPENBABEL_USE_SYSTEM_INCHI=OFF
+)
+
+if [[ "${PLATFORM}" == "linux" ]]; then
+  cmake_args+=( -DBUILD_MIXED=ON )
+fi
+
+cmake -S "${ROOT_DIR}" -B "${BUILD_DIR}" -G "${GENERATOR}" "${cmake_args[@]}"
 
 cmake --build "${BUILD_DIR}" --config "${CMAKE_BUILD_TYPE}" --target obabel
 
