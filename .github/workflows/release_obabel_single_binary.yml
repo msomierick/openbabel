@@ -101,12 +101,15 @@ jobs:
       - name: Create or Update Release
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
           TAG_NAME: ${{ steps.tag.outputs.name }}
         shell: bash
         run: |
-          if ! gh release view "${TAG_NAME}" >/dev/null 2>&1; then
+          if ! gh release view "${TAG_NAME}" -R "${GH_REPO}" >/dev/null 2>&1; then
             gh release create "${TAG_NAME}" \
+              -R "${GH_REPO}" \
               --title "${TAG_NAME}" \
               --notes "Automated obabel standalone single-binary artifacts."
           fi
-          gh release upload "${TAG_NAME}" release-assets/* --clobber
+          gh release upload "${TAG_NAME}" release-assets/* -R "${GH_REPO}" --clobber
+
