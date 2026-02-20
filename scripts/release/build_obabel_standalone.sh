@@ -40,7 +40,8 @@ cmake_args=(
   -DOPENBABEL_USE_SYSTEM_INCHI=OFF
 )
 
-if [[ "${PLATFORM}" == "linux" ]]; then
+if [[ "${PLATFORM}" == "linux" || "${PLATFORM}" == "macos" ]]; then
+  # Avoid libpthread lookup issues on macOS static builds by using Threads::Threads.
   cmake_args+=( -DBUILD_MIXED=ON )
 fi
 
