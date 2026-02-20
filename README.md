@@ -27,3 +27,6 @@ can be found in the file "COPYING" which should be included in your
 distribution.
 
 For more information, check the [Open Babel website](http://openbabel.org/).
+
+Single-binary `obabel` release and local build instructions are in
+`doc/obabel-single-binary-builds.md`.

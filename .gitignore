@@ -17,3 +17,11 @@ install
 
 # editors
 .vscode
+
+# local obabel standalone build artifacts
+build-obabel-standalone*/
+dist-local/
+dist-win-run*/
+build-obabel-standalone-local.log
+build-win-run*.log
+build-win-run*.err.log
